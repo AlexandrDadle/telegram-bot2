@@ -45,8 +45,8 @@ $config = [
                     'levels' => ['error', 'warning', 'trace'],
                     'categories' => ['webhook'],
                     'exportInterval' => 1,
-                    'fileMode' => 777,
-                    'dirMode' => 777,
+                    'fileMode' => 0775,
+                    'dirMode' => 0775,
                     'logFile' => '@app/tmp/log/webhook.log'
                 ],
             ],
