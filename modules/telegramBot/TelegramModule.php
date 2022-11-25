@@ -5,6 +5,7 @@ namespace app\modules\telegramBot;
 use dicr\telegram\entity\Update;
 use dicr\telegram\request\SetWebhook;
 use Yii;
+use yii\helpers\Json;
 
 /**
  * telegramBot module definition class
@@ -34,7 +35,7 @@ class TelegramModule extends \dicr\telegram\TelegramModule
 
     public function handle(Update $update)
     {
-        Yii::error([$update, 'return' => 'true'], 'webhook');
+        Yii::error([Json::decode($update), 'return' => 'true'], 'webhook');
 
         return true;
     }
