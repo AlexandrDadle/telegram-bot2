@@ -53,12 +53,7 @@ class BotController extends Controller
         return $this->asJson(['status' => 'ok']);
     }
 
-    public function actionIndex1(): Response
-    {
-       $this->module->installWebHook();
 
-        return $this->asJson([]);
-    }
 
     public function actionIndex2(): void
     {
@@ -96,17 +91,11 @@ class BotController extends Controller
 //        return $this->asJson(['ok' => true]);
     }
 
-    public function actionWebHookInfo()
+    public function actionSetWebHook(): Response
     {
-        /** @var TelegramModule $module */
-        $module = Yii::$app->get('telegram');
+        $this->module->installWebHook();
 
-        $webhook = $module->createRequest(['class' => \app\components\telegramRequests\WebhookInfo::class]);
-
-        $response = $webhook->send();
-
-        return $this->asJson($response);
-
+        return $this->asJson([]);
     }
 
     public function actionDeleteWebHook()
@@ -121,4 +110,19 @@ class BotController extends Controller
         return $this->asJson($response);
 
     }
+
+    public function actionWebHookInfo()
+    {
+        /** @var TelegramModule $module */
+        $module = Yii::$app->get('telegram');
+
+        $webhook = $module->createRequest(['class' => \app\components\telegramRequests\WebhookInfo::class]);
+
+        $response = $webhook->send();
+
+        return $this->asJson($response);
+
+    }
+
+
 }
