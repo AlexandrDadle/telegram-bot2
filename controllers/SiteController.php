@@ -82,10 +82,12 @@ class SiteController extends Controller
         /** @var TelegramModule $module получаем модуль */
         $module = Yii::$app->get('telegram');
 
+        $update = $module->createRequest([
+            'class' => Update::class,
+        ]);
+        $update->send();
 
-
-
-        return $this->render('test', ['response' => $response]);
+        return $this->render('test', ['response' =>  $response->message]);
 
     }
 
@@ -137,9 +139,8 @@ class SiteController extends Controller
 
         $webhook = $module->createRequest([
             'class' => SetWebhook::class,
-            'url' => 'https://api.telegram.org/bot5314115924:AAGH7fDvGCSa-mkXJ_5I2_FThdsvWX3Z-vM/setWebhook?url=217.77.219.102:8443/site/index',
+            'url' => 'https://www.dadle-service.shop/',
             'maxConnections' => 100,
-            'allowedUpdates' => ['message'],
         ]);
         $webhook->send();
 //        return $webhook;

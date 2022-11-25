@@ -2,12 +2,11 @@
 
 namespace app\modules\telegramBot\controllers;
 
-use app\components\telegramRequests\WebhookInfo;
 use app\modules\telegramBot\TelegramModule;
 use dicr\telegram\entity\Update;
+use dicr\telegram\entity\WebhookInfo;
 use dicr\telegram\request\GetWebhookInfo;
 use Yii;
-use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\Response;
 
@@ -34,20 +33,23 @@ class BotController extends Controller
 //            throw new BadRequestHttpException();
 //        }
 
-        Yii::debug('Webhook: ' . Yii::$app->request->rawBody,  'webhook');
+//        Yii::debug('Webhook: ' . Yii::$app->request->rawBody,  'webhook');
+//
+//        $ret = true;
+//
+//        // вызываем пользовательский обработчик
+//        if (!empty($this->module->handler)) {
+//            $update = new Update([
+//                'json' => Yii::$app->request->bodyParams
+//            ]);
+//
+//            $ret = call_user_func($this->module->handler, $update, $this->module);
+//        }
 
-        $ret = true;
+        /** @var TelegramModule $module */
+        $module = Yii::$app->get('telegram');
 
-        // вызываем пользовательский обработчик
-        if (!empty($this->module->handler)) {
-            $update = new Update([
-                'json' => Yii::$app->request->bodyParams
-            ]);
-
-            $ret = call_user_func($this->module->handler, $update, $this->module);
-        }
-
-        return $this->asJson($ret);
+        return $this->asJson(['status' => 'ok']);
     }
 
     public function actionIndex1(): Response
@@ -91,5 +93,18 @@ class BotController extends Controller
         echo '<br>';
 
 //        return $this->asJson(['ok' => true]);
+    }
+
+    public function actionWebHookInfo()
+    {
+        /** @var \dicr\telegram\TelegramModule $module */
+        $module = Yii::$app->get('telegram');
+
+        $webhook = $module->createRequest(['class' => WebhookInfo::class]);
+
+        $response = $webhook->send();
+
+        return $this->asJson($response);
+
     }
 }
