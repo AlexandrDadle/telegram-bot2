@@ -1,3 +1,4 @@
+
 <?php
 
 // NOTE: Make sure this file is not accessible when deployed to production

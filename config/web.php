@@ -40,6 +40,15 @@ $config = [
                     'class' => 'yii\log\FileTarget',
                     'levels' => ['error', 'warning'],
                 ],
+                [
+                    'class' => 'yii\log\FileTarget',
+                    'levels' => ['error', 'warning', 'trace'],
+                    'categories' => ['webhook'],
+                    'exportInterval' => 1,
+                    'fileMode' => 777,
+                    'dirMode' => 777,
+                    'logFile' => '@app/tmp/log/webhook.log'
+                ],
             ],
         ],
         'db' => $db,
@@ -52,6 +61,12 @@ $config = [
             'showScriptName' => false,
             'rules' => [
             ],
+        ],
+    ],
+    'modules' => [
+        'telegramBot' => [
+            'class' => 'app\modules\telegramBot\TelegramModule',
+            'botToken' => '5314115924:AAGH7fDvGCSa-mkXJ_5I2_FThdsvWX3Z-vM',
         ],
     ],
     'params' => $params,

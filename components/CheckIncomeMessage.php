@@ -16,8 +16,12 @@ use yii\base\BaseObject;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
 
+/**
+ * @prop
+ */
 class CheckIncomeMessage extends BaseObject
 {
+    /** @var TelegramModule|null  */
     private $telegramModule = null;
     public $prodName;
     public $prodType;
@@ -33,15 +37,21 @@ class CheckIncomeMessage extends BaseObject
         if ($this->telegramModule == null) {
             /** @var TelegramModule $module получаем модуль */
             $this->telegramModule = Yii::$app->get('telegram');
+            $this->telegramModule->handler = [$this, 'webhookResponse'];
         }
     }
+
+    public function webhookResponse(Update $update, TelegramModule $module)
+    {
+        Yii::debug(['update' => $update], 'webhook');
+    }
+
+
 
     /**
      * @throws Exception
      * @throws InvalidConfigException
      */
-
-
     public function handleUpdate(Update $update)
     {
         $command = new CheckBackCommand;

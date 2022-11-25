@@ -6,7 +6,7 @@
 /* @var $updates array */
 /* @var $hookinfo \app\components\telegramRequests\WebhookInfo */
 
-var_dump($hookinfo);
+var_dump(json_encode($hookinfo));
 
 
 

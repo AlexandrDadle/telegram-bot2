@@ -10,12 +10,16 @@ use app\models\Products;
 use app\models\User;
 use dicr\telegram\entity\InlineKeyboardMarkup;
 use dicr\telegram\entity\KeyboardButton;
+use dicr\telegram\entity\Message;
 use dicr\telegram\entity\ReplyKeyboardMarkup;
 use dicr\telegram\entity\Update;
+use dicr\telegram\entity\WebhookInfo;
 use dicr\telegram\request\GetWebhookInfo;
 use dicr\telegram\request\SendMessage;
 use dicr\telegram\request\SetWebhook;
 use dicr\telegram\TelegramModule;
+use dicr\telegram\TelegramResponse;
+use dicr\telegram\WebhookController;
 use Yii;
 use yii\base\Exception;
 use yii\base\InvalidConfigException;
@@ -79,20 +83,9 @@ class SiteController extends Controller
         $module = Yii::$app->get('telegram');
 
 
-        foreach (Products::getProductsByTypeForKeyboard(Products::TYPE_PRODUCT_ZIOLO) as $item){
-            var_dump($item);
-        }
-        exit();
-//        /** @var SendMessage $request формируем запрос */
-//        $request = $module->createRequest([
-//            'class' => SendMessage::class,
-//            'chatId' => '347236018',
-//            'text' => Products::getAllCountInStockByType(Products::TYPE_PRODUCT_BIALKO),
-//        ]);
 
 
-//        $response = $request->send();
-        return $this->render('test');
+        return $this->render('test', ['response' => $response]);
 
     }
 
@@ -139,18 +132,17 @@ class SiteController extends Controller
      */
     public function actionSetWebHook()
     {
-        /** @var TelegramModule $module получаем модуль */
+        /** @var TelegramModule $module Получаем модуль */
         $module = Yii::$app->get('telegram');
 
-        $module->createRequest([
+        $webhook = $module->createRequest([
             'class' => SetWebhook::class,
-            'url' => 'https://shop-bot-tg.herokuapp.com/',
+            'url' => 'https://api.telegram.org/bot5314115924:AAGH7fDvGCSa-mkXJ_5I2_FThdsvWX3Z-vM/setWebhook?url=217.77.219.102:8443/site/index',
             'maxConnections' => 100,
-            'allowedUpdates' => ['message']
+            'allowedUpdates' => ['message'],
         ]);
-        $result = $module->installWebHook();
-
-        return $this->render('webhookinfo', ['hookinfo' => $result]);
+        $webhook->send();
+//        return $webhook;
     }
 
 
