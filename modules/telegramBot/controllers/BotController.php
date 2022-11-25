@@ -33,11 +33,11 @@ class BotController extends Controller
     {
         /** @var TelegramModule $module */
         $module = Yii::$app->get('telegram');
+        Yii::$app->response->format == Response::FORMAT_JSON;
 
-        $response = $module->createRequest(['class' => Update::class]);
 
 
-        return $this->asJson($response);
+        return $this->asJson(['ok' => 'ok']);
     }
 
     public function actionSetWebHook(): Response
