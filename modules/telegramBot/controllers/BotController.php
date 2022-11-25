@@ -67,21 +67,28 @@ class BotController extends Controller
         $info = $request->send();
 
         printf("URL: %s\n", $info->url ?: '-');
+        echo '<br>';
 
         printf("HasCustomCertificate: %s\n", $info->hasCustomCertificate ? 'yes' : 'no');
+        echo '<br>';
 
         printf("PendingUpdateCount: %d\n", $info->pendingUpdateCount);
+        echo '<br>';
 
         printf("LastErrorDate: %s\n", empty($info->lastErrorDate) ? '-' :
             date('d.m.Y H:i:s', $info->lastErrorDate)
         );
+        echo '<br>';
 
         printf("LastErrorMessage: %s\n", $info->lastErrorMessage ?: '-');
+        echo '<br>';
         printf("MaxConnections: %d\n", $info->maxConnections);
+        echo '<br>';
 
         printf("AllowedUpdates: %s\n", empty($info->allowedUpdates) ? '-' :
             implode(', ', $info->allowedUpdates)
         );
+        echo '<br>';
 
 //        return $this->asJson(['ok' => true]);
     }
