@@ -40,7 +40,7 @@ class BotController extends Controller
 
         Yii::error($response);
 
-        $request = $this->telegramModule->createRequest([
+        $request = $module->createRequest([
             'class' => SendMessage::class,
             'chatId' => '347236018',
             'text' => $response['text'],
