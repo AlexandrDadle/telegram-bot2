@@ -35,21 +35,21 @@ class BotController extends Controller
 
     public function actionIndex(): Response
     {
-        /** @var TelegramModule $module */
-        $module = Yii::$app->get('telegram');
-
-        $response = Yii::$app->request->post();
-
-        Yii::error($response, 'webhook');
-
-        $request = $module->createRequest([
-            'class' => SendMessage::class,
-            'chatId' => '347236018',
-            'text' => 'asdasdas',
-        ]);
-        $request->send();
-
-        return true;
+//        /** @var TelegramModule $module */
+//        $module = Yii::$app->get('telegram');
+//
+//        $response = Yii::$app->request->post();
+//
+////        Yii::error($response, 'webhook');
+////
+////        $request = $module->createRequest([
+////            'class' => SendMessage::class,
+////            'chatId' => '347236018',
+////            'text' => 'asdasdas',
+////        ]);
+////        $request->send();
+//
+//        return true;
     }
 
     public function actionSetWebHook(): Response

@@ -17,15 +17,6 @@ class TelegramModule extends \dicr\telegram\TelegramModule
      */
     public $controllerNamespace = 'app\modules\telegramBot\controllers';
 
-    /**
-     * {@inheritdoc}
-     */
-    public function init(): void
-    {
-        parent::init();
-
-        $this->handler = [BotController::class, 'webhookResponse'];
-    }
 
     public function installWebHook() : void
     {
