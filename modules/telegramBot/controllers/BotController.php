@@ -3,6 +3,7 @@
 namespace app\modules\telegramBot\controllers;
 
 use app\modules\telegramBot\TelegramModule;
+use dicr\helper\ArrayHelper;
 use dicr\telegram\entity\Message;
 use dicr\telegram\entity\Update;
 use dicr\telegram\entity\WebhookInfo;
@@ -43,7 +44,7 @@ class BotController extends Controller
         $request = $module->createRequest([
             'class' => SendMessage::class,
             'chatId' => '347236018',
-            'text' => $response['text'],
+            'text' => 'asdasdas',
         ]);
         $request->send();
 
