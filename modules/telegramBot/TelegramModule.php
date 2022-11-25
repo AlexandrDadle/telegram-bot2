@@ -33,6 +33,7 @@ class TelegramModule extends \dicr\telegram\TelegramModule
         $request = $this->createRequest([
             'class' => SetWebhook::class,
             'url' => 'https://www.dadle-service.shop/telegramBot/bot',
+            'maxConnections' => 100,
         ]);
 
         // при ошибке будет Exception
