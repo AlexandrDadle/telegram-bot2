@@ -13,6 +13,7 @@ use dicr\telegram\request\SendMessage;
 use dicr\telegram\TelegramRequest;
 use dicr\telegram\TelegramResponse;
 use Yii;
+use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\web\Response;
 
@@ -35,21 +36,24 @@ class BotController extends Controller
 
     public function actionIndex(): Response
     {
-//        /** @var TelegramModule $module */
-//        $module = Yii::$app->get('telegram');
-//
-//        $response = Yii::$app->request->post();
-//
-////        Yii::error($response, 'webhook');
-////
-////        $request = $module->createRequest([
-////            'class' => SendMessage::class,
-////            'chatId' => '347236018',
-////            'text' => 'asdasdas',
-////        ]);
-////        $request->send();
-//
-//        return true;
+        if (! Yii::$app->request->isPost) {
+            throw new BadRequestHttpException();
+        }
+
+        Yii::debug('Webhook: ' . Yii::$app->request->rawBody);
+
+        $ret = true;
+
+        // вызываем пользовательский обработчик
+        if (! empty($this->module->handler)) {
+            $update = new Update([
+                'json' => Yii::$app->request->bodyParams
+            ]);
+
+            $ret = call_user_func($this->module->handler, $update, $this->module);
+        }
+
+        return $this->asJson($ret);
     }
 
     public function actionSetWebHook(): Response

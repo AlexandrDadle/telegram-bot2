@@ -2,8 +2,7 @@
 
 namespace app\modules\telegramBot;
 
-use app\modules\telegramBot\controllers\BotController;
-use dicr\helper\Url;
+use dicr\telegram\entity\Update;
 use dicr\telegram\request\SetWebhook;
 use Yii;
 
@@ -33,7 +32,7 @@ class TelegramModule extends \dicr\telegram\TelegramModule
         Yii::debug('Установлен webhook: ' . $request->url, __METHOD__);
     }
 
-    public function handle(\dicr\telegram\entity\Update $update)
+    public function handle(Update $update)
     {
         Yii::error([$update, 'return' => 'true'], 'webhook');
 
