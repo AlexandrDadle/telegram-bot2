@@ -33,9 +33,8 @@ class BotController extends Controller
     {
         /** @var TelegramModule $module */
         $module = Yii::$app->get('telegram');
-        $response = $module->createRequest(['class' => TelegramResponse::class]);
 
-        $response = new TelegramResponse();
+        $response = $module->createRequest(['class' => Update::class]);
 
 
         return $this->asJson($response);
