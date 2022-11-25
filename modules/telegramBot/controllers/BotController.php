@@ -7,6 +7,7 @@ use dicr\telegram\entity\Update;
 use dicr\telegram\entity\WebhookInfo;
 use dicr\telegram\request\DeleteWebHook;
 use dicr\telegram\request\GetWebhookInfo;
+use dicr\telegram\TelegramResponse;
 use Yii;
 use yii\web\Controller;
 use yii\web\Response;
@@ -30,27 +31,12 @@ class BotController extends Controller
 
     public function actionIndex(): Response
     {
-//        if (!Yii::$app->request->isPost) {
-//            throw new BadRequestHttpException();
-//        }
-
-//        Yii::debug('Webhook: ' . Yii::$app->request->rawBody,  'webhook');
-//
-//        $ret = true;
-//
-//        // вызываем пользовательский обработчик
-//        if (!empty($this->module->handler)) {
-//            $update = new Update([
-//                'json' => Yii::$app->request->bodyParams
-//            ]);
-//
-//            $ret = call_user_func($this->module->handler, $update, $this->module);
-//        }
-
         /** @var TelegramModule $module */
         $module = Yii::$app->get('telegram');
+        $response = $module->createRequest(['class' => TelegramResponse::class]);
 
-        return $this->asJson(['status' => 'ok']);
+
+        return $this->asJson($response);
     }
 
 
