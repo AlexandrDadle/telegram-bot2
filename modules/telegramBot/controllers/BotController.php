@@ -38,7 +38,7 @@ class BotController extends Controller
 
         $response = Yii::$app->request->post();
 
-        Yii::error($response);
+        Yii::error($response, 'webhook');
 
         $request = $module->createRequest([
             'class' => SendMessage::class,
