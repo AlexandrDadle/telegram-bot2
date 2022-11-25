@@ -35,7 +35,7 @@ class TelegramModule extends \dicr\telegram\TelegramModule
 
     public function handle(Update $update)
     {
-        Yii::error([(array)($update), 'return' => 'true'], 'webhook');
+        Yii::error([unserialize($update), 'return' => 'true'], 'webhook');
 
         return true;
     }
