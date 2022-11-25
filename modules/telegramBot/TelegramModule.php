@@ -38,6 +38,8 @@ class TelegramModule extends \dicr\telegram\TelegramModule
 //        Yii::error([unserialize($update->message), 'return' => 'true'], 'webhook');
 //        Yii::error([Json::decode($update->message), 'return' => 'true'], 'webhook');
         Yii::error([$update->message->attributes, 'return' => 'true'], 'webhook');
+        Yii::error([$update->message->from->attributes, 'return' => 'true'], 'webhook');
+        Yii::error([$update->message->chat->attributes, 'return' => 'true'], 'webhook');
 
         return true;
     }
