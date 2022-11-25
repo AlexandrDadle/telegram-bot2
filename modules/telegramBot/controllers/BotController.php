@@ -5,6 +5,7 @@ namespace app\modules\telegramBot\controllers;
 use app\modules\telegramBot\TelegramModule;
 use dicr\telegram\entity\Update;
 use dicr\telegram\entity\WebhookInfo;
+use dicr\telegram\request\DeleteWebHook;
 use dicr\telegram\request\GetWebhookInfo;
 use Yii;
 use yii\web\Controller;
@@ -101,6 +102,19 @@ class BotController extends Controller
         $module = Yii::$app->get('telegram');
 
         $webhook = $module->createRequest(['class' => \app\components\telegramRequests\WebhookInfo::class]);
+
+        $response = $webhook->send();
+
+        return $this->asJson($response);
+
+    }
+
+    public function actionDeleteWebHook()
+    {
+        /** @var TelegramModule $module */
+        $module = Yii::$app->get('telegram');
+
+        $webhook = $module->createRequest(['class' => DeleteWebHook::class]);
 
         $response = $webhook->send();
 
