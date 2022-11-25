@@ -42,6 +42,10 @@ class TelegramModule extends \dicr\telegram\TelegramModule
         Yii::debug('Установлен webhook: ' . $request->url, __METHOD__);
     }
 
+    public function handle(\dicr\telegram\entity\Update $update)
+    {
+        Yii::error($update, 'webhook');
+    }
 
 
 }

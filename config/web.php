@@ -1,5 +1,8 @@
 <?php
 
+use app\modules\telegramBot\TelegramModule;
+use dicr\telegram\entity\Update;
+
 $params = require __DIR__ . '/params.php';
 $db = require __DIR__ . '/db.php';
 
@@ -55,6 +58,9 @@ $config = [
         'telegram' => [
             'class' => dicr\telegram\TelegramModule::class,
             'botToken' => '5314115924:AAGH7fDvGCSa-mkXJ_5I2_FThdsvWX3Z-vM',
+            'handler' => static function(Update $update, TelegramModule $module) {
+                $module->handle($update);
+            }
         ],
         'urlManager' => [
             'enablePrettyUrl' => true,

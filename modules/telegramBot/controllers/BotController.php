@@ -10,6 +10,7 @@ use dicr\telegram\entity\WebhookInfo;
 use dicr\telegram\request\DeleteWebHook;
 use dicr\telegram\request\GetWebhookInfo;
 use dicr\telegram\request\SendMessage;
+use dicr\telegram\TelegramRequest;
 use dicr\telegram\TelegramResponse;
 use Yii;
 use yii\web\Controller;
