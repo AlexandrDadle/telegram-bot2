@@ -46,7 +46,9 @@ class BotController extends Controller
             'chatId' => '347236018',
             'text' => 'asdasdas',
         ]);
-        return $request->send();
+        $request->send();
+
+        return true;
     }
 
     public function actionSetWebHook(): Response
