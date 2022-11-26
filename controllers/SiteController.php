@@ -80,7 +80,7 @@ class SiteController extends Controller
     public function actionIndex()
     {
         /** @var TelegramModule $module получаем модуль */
-        $module = Yii::$app->get('telegram');
+        $module = \app\modules\telegramBot\TelegramModule::getInstance();
 
         $update = $module->createRequest([
             'class' => Update::class,
