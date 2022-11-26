@@ -43,6 +43,7 @@ class TelegramModule extends \dicr\telegram\TelegramModule
         $messageText = $update->message->text;
         $userName = $update->message->from->userName;
         $userID = $update->message->from->id;
+        $chatID = $update->message->chat->id;
 
         $user = User::findOne(['tg_user_id' => $userID]);
         if (!$user) {
@@ -53,7 +54,7 @@ class TelegramModule extends \dicr\telegram\TelegramModule
                 case '/start':
                     $messageText = 'Login: ';
                     $replyMarkup = $user->getReplayMarkupKeyboard($text);
-                    $this->sendMessage($userID, $messageText, $replyMarkup);
+                    $this->sendMessage($chatID, $messageText, $replyMarkup);
                     break;
                 case 'Вход':
                     $command->setEmptyCommandFile($update->message->from->id);
@@ -71,7 +72,7 @@ class TelegramModule extends \dicr\telegram\TelegramModule
                 ";
                     }
                     $replyMarkup = $user->getReplayMarkupKeyboard($text);
-                    $this->sendMessage($userID, $messageText, $replyMarkup);
+                    $this->sendMessage($chatID, $messageText, $replyMarkup);
                     break;
                 case 'Склад':
                     if (!$user->hasStoreAccess()) {
@@ -95,7 +96,7 @@ class TelegramModule extends \dicr\telegram\TelegramModule
                 ";
                     }
                     $replyMarkup = $user->getReplayMarkupKeyboard($text);
-                    $this->sendMessage($userID, $messageText, $replyMarkup);
+                    $this->sendMessage($chatID, $messageText, $replyMarkup);
                     break;
                 case 'Доступные позиции':
                 case 'Шишки':
@@ -108,7 +109,7 @@ class TelegramModule extends \dicr\telegram\TelegramModule
                         $messageText = $text;
                     }
                     $replyMarkup = $user->getReplayMarkupKeyboard($text);
-                    $this->sendMessage($userID, $messageText, $replyMarkup);
+                    $this->sendMessage($chatID, $messageText, $replyMarkup);
                     break;
                 case 'Добавить продукт':
                     if (!$user->isAdmin()) {
@@ -117,7 +118,7 @@ class TelegramModule extends \dicr\telegram\TelegramModule
                         $messageText = 'http://www.shop-bot/product/create';
                     }
                     $replyMarkup = $user->getReplayMarkupKeyboard($text);
-                    $this->sendMessage($userID, $messageText, $replyMarkup);
+                    $this->sendMessage($chatID, $messageText, $replyMarkup);
                     break;
 
 
@@ -129,7 +130,7 @@ class TelegramModule extends \dicr\telegram\TelegramModule
                         $messageText = 'Smell Bomb';
                     }
                     $replyMarkup = $user->getReplayMarkupKeyboard($text);
-                    $this->sendMessage($userID, $messageText, $replyMarkup);
+                    $this->sendMessage($chatID, $messageText, $replyMarkup);
                     break;
 
                 case 'Цена брутто':
@@ -139,13 +140,13 @@ class TelegramModule extends \dicr\telegram\TelegramModule
                         $messageText = 'Цена брутто';
                     }
                     $replyMarkup = $user->getReplayMarkupKeyboard($text);
-                    $this->sendMessage($userID, $messageText, $replyMarkup);
+                    $this->sendMessage($chatID, $messageText, $replyMarkup);
                     break;
                 case 'Назад':
                     $lastCommand = $command->getLastCommand($update->message->from->id);
                     $messageText = $lastCommand;
                     $replyMarkup = $user->getReplayMarkupKeyboard($lastCommand);
-                    $this->sendMessage($userID, $messageText, $replyMarkup);
+                    $this->sendMessage($chatID, $messageText, $replyMarkup);
                     break;
 
             }
@@ -154,28 +155,29 @@ class TelegramModule extends \dicr\telegram\TelegramModule
         return true;
     }
 
-    public function sendMessage($userID, $messageText, $replyMarkup)
+    public function sendMessage($chatID, $messageText, $replyMarkup)
     {
         if ($replyMarkup) {
             $encodedMarkup = json_encode($replyMarkup);
             /** @var SendMessage $request формируем запрос */
             $request = $this->createRequest([
                 'class' => SendMessage::class,
-                'chatId' => $userID,
+                'chatId' => $chatID,
                 'text' => $messageText,
                 'parseMode' => SendMessage::PARSE_MODE_MARKDOWN_V2,
                 'replyMarkup' => $encodedMarkup,
             ]);
         } else {
-            /** @var SendMessage $request формируем запрос */
+            /** @var SendMessage $request Формируем запрос */
             $request = $this->createRequest([
                 'class' => SendMessage::class,
-                'chatId' => $userID,
+                'chatId' => $chatID,
                 'text' => $messageText
             ]);
         }
         // отправка сообщения
         $response = $request->send();
+
         Yii::error($response->getErrors(), 'webhook');
     }
 
