@@ -46,7 +46,7 @@ class TelegramModule extends \dicr\telegram\TelegramModule
 
         $user = User::findOne(['tg_user_id' => $userID]);
         if (!$user) {
-            $user = User::create($update->message->from, $update->message->chat);
+            $user = User::create($update);
         }
         if (!empty($text)) {
             switch ($text) {

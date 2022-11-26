@@ -3,6 +3,7 @@
 namespace app\models;
 
 use dicr\telegram\entity\Chat;
+use dicr\telegram\entity\Update;
 use yii\db\ActiveRecord;
 use yii\debug\UserswitchAsset;
 
@@ -104,18 +105,18 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     /**
      * Tworzy nowego użytkownika w BOT.
      *
-     * @param \dicr\telegram\entity\User|null $telegramUser
+     * @param User|null $telegramUser
      * @param Chat $chat Czat uzytkownika, z którego się odbywa rejestracja
      * @return User
      */
-    public static function create(?\dicr\telegram\entity\User $telegramUser, Chat $chat): User
+    public static function create(Update $update): User
     {
         $newUser = new User();
-        $newUser->first_name = $telegramUser->firstName;
-        $newUser->second_name = $telegramUser->lastName;
-        $newUser->tg_chat_id = $chat->id;
-        $newUser->tg_user_id = $telegramUser->id;
-        $newUser->tg_user_name = $telegramUser->userName;
+        $newUser->first_name = $update->message->from->firstName;
+        $newUser->second_name = $update->message->from->lastName;
+        $newUser->tg_chat_id = $update->message->chat->id;
+        $newUser->tg_user_id = $update->message->from->id;
+        $newUser->tg_user_name = $update->message->from->userName;
         $newUser->registration_date = (new \DateTime())->format('Y-m-d H:i:s');
         $newUser->save();
 
