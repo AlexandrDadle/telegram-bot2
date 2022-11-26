@@ -18,6 +18,7 @@ use yii\base\InvalidConfigException;
 
 /**
  * @prop
+ * @deprecated
  */
 class CheckIncomeMessage extends BaseObject
 {

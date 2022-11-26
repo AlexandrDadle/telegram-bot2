@@ -7,6 +7,9 @@ use dicr\telegram\TelegramModule;
 use Yii;
 use yii\base\InvalidConfigException;
 
+/**
+ * @deprecated
+ */
 class UpdateOffSet
 {
     private $offSet = 0;

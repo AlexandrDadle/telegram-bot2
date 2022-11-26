@@ -1,8 +1,8 @@
 <?php
-declare(strict_types = 1);
+
 namespace app\components\telegramRequests;
 
-use dicr\telegram\TelegramModule;
+use app\modules\telegramBot\TelegramModule;
 use dicr\telegram\TelegramResponse;
 use Yii;
 use yii\base\Exception;
@@ -10,27 +10,34 @@ use yii\httpclient\Client;
 
 class TelegramRequest extends \dicr\telegram\TelegramRequest
 {
-    /** @var \app\modules\telegramBot\TelegramModule */
+    /** @var TelegramModule */
     protected $module;
 
-
-    public function __construct(\app\modules\telegramBot\TelegramModule $module, array $config = [])
-    {
-        parent::__construct($module, $config);
-
-        $this->module = TelegramModule::getInstance();
-
-    }
-
+    /**
+     * @inheritDoc
+     */
     public function func(): string
     {
-        return static::func();
+        return true;
+    }
+
+    /**
+     * Конструктор.
+     *
+     * @param TelegramModule $module
+     * @param array $config
+     */
+    public function __construct(TelegramModule $module, array $config = [])
+    {
+        parent::__construct($module,$config);
+
+        $this->module = $module;
     }
 
     /**
      * Отправляет запрос.
      *
-     * @return array ответ (переопределяется в наследуемом классе)
+     * @return array Ответ (переопределяется в наследуемом классе)
      * @throws Exception
      * @noinspection PhpMissingReturnTypeInspection
      * @noinspection ReturnTypeCanBeDeclaredInspection
@@ -51,18 +58,18 @@ class TelegramRequest extends \dicr\telegram\TelegramRequest
             ]);
 
         // получаем ответ
-        Yii::error('Запрос: ' . $req->toString(), __METHOD__);
-        $res = $req->send();
-        Yii::error('Ответ: ' . $res->toString(), __METHOD__);
+        Yii::debug('Запрос: ' . $req->toString(), __METHOD__);
+        $result = $req->send();
+        Yii::debug('Ответ: ' . $result->toString(), __METHOD__);
 
-        if (! $res->isOk) {
-            throw new Exception('HTTP-error: ' . $res->statusCode);
+        if (! $result->isOk) {
+            throw new Exception('HTTP-error: ' . $result->statusCode);
         }
 
         // формируем ответ Telegram
-        $res->format = Client::FORMAT_JSON;
+        $result->format = Client::FORMAT_JSON;
         $tgResponse = new TelegramResponse([
-            'json' => $res->data
+            'json' => $result->data
         ]);
 
         // обработка ошибок
