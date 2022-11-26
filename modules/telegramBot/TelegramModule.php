@@ -187,6 +187,7 @@ class TelegramModule extends \dicr\telegram\TelegramModule
         try {
             $request->send();
         } catch (\Exception $exception){
+            $this->sendMessage($chatID, $exception->getMessage(), []);
             Yii::error([
                 'Error' => $exception->getMessage(),
             ],'webhook');
