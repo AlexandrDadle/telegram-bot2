@@ -1,8 +1,7 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
+
 namespace app\components\telegramRequests;
-
-
 
 use dicr\telegram\TelegramEntity;
 
@@ -66,8 +65,8 @@ abstract class TelegramRequest extends TelegramEntity
         $result = $req->send();
         Yii::error('Ответ: ' . $result->toString(), 'webhook');
 
-        if (! $result->isOk) {
-            throw new Exception('HTTP-error: ' . $result->statusCode. ', Request: ' . $req->toString());
+        if (!$result->isOk) {
+            throw new Exception('HTTP-error: ' . $result->statusCode . ', Request: ' . $req->toString());
         }
 
         // формируем ответ Telegram
@@ -81,7 +80,7 @@ abstract class TelegramRequest extends TelegramEntity
             // если запрос был отфильтрован из-за flood-фильтра, то повторяем запрос
             $retryAfter = (int)$tgResponse->parameters->retryAfter;
 
-            if (! empty($retryAfter)) {
+            if (!empty($retryAfter)) {
                 Yii::error(
                     'Сработал flood-фильтр, ожидаем ' . $retryAfter . ' секунд ...', __METHOD__
                 );
