@@ -18,7 +18,7 @@ class TelegramRequest extends \dicr\telegram\TelegramRequest
      */
     public function func(): string
     {
-        return true;
+        return self::func();
     }
 
     /**
