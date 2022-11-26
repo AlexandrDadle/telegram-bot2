@@ -55,9 +55,9 @@ abstract class TelegramRequest extends \dicr\telegram\TelegramRequest
             ]);
 
         // получаем ответ
-        Yii::debug('Запрос: ' . $req->toString(), __METHOD__);
+        Yii::error('Запрос: ' . $req->toString(), __METHOD__);
         $result = $req->send();
-        Yii::debug('Ответ: ' . $result->toString(), __METHOD__);
+        Yii::error('Ответ: ' . $result->toString(), __METHOD__);
 
         if (! $result->isOk) {
             throw new Exception('HTTP-error: ' . $result->statusCode);
