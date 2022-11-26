@@ -8,7 +8,7 @@ use Yii;
 use yii\base\Exception;
 use yii\httpclient\Client;
 
-class TelegramRequest extends \dicr\telegram\TelegramRequest
+abstract class TelegramRequest extends \dicr\telegram\TelegramRequest
 {
     /** @var TelegramModule */
     protected $module;
@@ -16,10 +16,7 @@ class TelegramRequest extends \dicr\telegram\TelegramRequest
     /**
      * @inheritDoc
      */
-    public function func(): string
-    {
-        return self::func();
-    }
+    abstract function func(): string;
 
     /**
      * Конструктор.
@@ -29,9 +26,9 @@ class TelegramRequest extends \dicr\telegram\TelegramRequest
      */
     public function __construct(TelegramModule $module, array $config = [])
     {
-        parent::__construct($module,$config);
-
         $this->module = $module;
+
+        parent::__construct($module,$config);
     }
 
     /**
