@@ -73,7 +73,7 @@ class BotController extends Controller
     public function actionWebHookInfo()
     {
         /** @var TelegramModule $module */
-        $module = Yii::$app->get('telegram');
+        $module = Yii::$app->getModule('telegram');
 
         $webhook = $module->createRequest(['class' => GetWebhookInfo::class]);
 
