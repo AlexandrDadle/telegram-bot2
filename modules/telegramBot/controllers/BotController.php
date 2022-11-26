@@ -30,7 +30,7 @@ class BotController extends Controller
 
     public function actionIndex(): Response
     {
-        if (! Yii::$app->request->isPost) {
+        if (!Yii::$app->request->isPost) {
             throw new BadRequestHttpException();
         }
 
@@ -39,7 +39,7 @@ class BotController extends Controller
         $ret = true;
 
         // вызываем пользовательский обработчик
-        if (! empty($this->module->handler)) {
+        if (!empty($this->module->handler)) {
             $update = new Update([
                 'json' => Yii::$app->request->bodyParams
             ]);
@@ -54,7 +54,7 @@ class BotController extends Controller
     {
         $this->module->installWebHook();
 
-        return true;
+        return $this->asJson([]);
     }
 
     public function actionDeleteWebHook()
