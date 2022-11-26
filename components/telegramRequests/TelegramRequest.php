@@ -55,9 +55,9 @@ abstract class TelegramRequest extends \dicr\telegram\TelegramRequest
             ]);
 
         // получаем ответ
-        Yii::error('Запрос: ' . $req->toString(), __METHOD__);
+        Yii::error('Запрос: ' . $req->toString(), 'webhook');
         $result = $req->send();
-        Yii::error('Ответ: ' . $result->toString(), __METHOD__);
+        Yii::error('Ответ: ' . $result->toString(), 'webhook');
 
         if (! $result->isOk) {
             throw new Exception('HTTP-error: ' . $result->statusCode);
