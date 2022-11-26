@@ -300,7 +300,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
     public function hasNoAccess(): string
     {
-        return '⛔Доступ закрыт.';
+        return 'Доступ закрыт.';
     }
 
     public function isAdmin(): bool
