@@ -178,7 +178,7 @@ class TelegramModule extends \dicr\telegram\TelegramModule
         // отправка сообщения
         $response = $request->send();
 
-        Yii::error($response->getErrors(), 'webhook');
+        Yii::error($response->text, 'webhook');
     }
 
 
