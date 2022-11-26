@@ -79,15 +79,15 @@ class SiteController extends Controller
      */
     public function actionIndex()
     {
-        /** @var TelegramModule $module получаем модуль */
-        $module = \app\modules\telegramBot\TelegramModule::getInstance();
+        /** @var \app\modules\telegramBot\TelegramModule $module получаем модуль */
+        $module = TelegramModule::getInstance();
 
         $update = $module->createRequest([
             'class' => Update::class,
         ]);
-        $update->send();
+        $response = $update->send();
 
-        return $this->render('test', ['response' =>  $response->message]);
+        return $this->render('test', ['response' =>  $response]);
 
     }
 
