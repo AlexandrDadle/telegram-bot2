@@ -8,7 +8,9 @@ use app\models\User;
 use dicr\telegram\entity\Update;
 use dicr\telegram\request\SendMessage;
 use dicr\telegram\request\SetWebhook;
+use dicr\telegram\TelegramRequest;
 use Yii;
+use yii\base\InvalidConfigException;
 use yii\helpers\Json;
 
 /**
@@ -16,11 +18,6 @@ use yii\helpers\Json;
  */
 class TelegramModule extends \dicr\telegram\TelegramModule
 {
-    /**
-     * {@inheritdoc}
-     */
-    public $controllerNamespace = 'app\modules\telegramBot\controllers';
-
 
     public function installWebHook() : void
     {
@@ -35,6 +32,19 @@ class TelegramModule extends \dicr\telegram\TelegramModule
         $request->send();
 
         Yii::debug('Установлен webhook: ' . $request->url, __METHOD__);
+    }
+
+    /**
+     * Создает запрос.
+     *
+     * @param array $config
+     * @return TelegramRequest
+     * @throws InvalidConfigException
+     */
+    public function createRequest(array $config) : TelegramRequest
+    {
+        /** @noinspection PhpIncompatibleReturnTypeInspection */
+        return Yii::createObject($config, [$this]);
     }
 
     public function handle(Update $update): bool
