@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types = 1);
 namespace app\components\telegramRequests;
 
 use app\modules\telegramBot\TelegramModule;
@@ -8,7 +8,19 @@ use Yii;
 use yii\base\Exception;
 use yii\httpclient\Client;
 
-abstract class TelegramRequest extends \dicr\telegram\TelegramRequest
+namespace dicr\telegram;
+
+use Yii;
+use yii\base\Exception;
+use yii\httpclient\Client;
+
+use function array_filter;
+use function sleep;
+
+/**
+ * Абстрактный запрос.
+ */
+abstract class TelegramRequest extends TelegramEntity
 {
     /** @var TelegramModule */
     protected $module;
@@ -28,7 +40,7 @@ abstract class TelegramRequest extends \dicr\telegram\TelegramRequest
     {
         $this->module = $module;
 
-        parent::__construct($module,$config);
+        parent::__construct($config);
     }
 
     /**
