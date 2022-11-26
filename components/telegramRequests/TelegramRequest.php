@@ -21,11 +21,8 @@ use function sleep;
 abstract class TelegramRequest extends TelegramEntity
 {
     /** @var TelegramModule */
-    protected $module;
+    protected TelegramModule $module;
 
-    /**
-     * @inheritDoc
-     */
     abstract function func(): string;
 
     /**
@@ -51,6 +48,8 @@ abstract class TelegramRequest extends TelegramEntity
      */
     public function send()
     {
+        if (true) throw new Exception('JA popal suda');
+
         // фильтруем данные
         $data = array_filter(
             $this->json,
