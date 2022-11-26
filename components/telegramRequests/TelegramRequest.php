@@ -2,17 +2,15 @@
 declare(strict_types = 1);
 namespace app\components\telegramRequests;
 
+
+
+use dicr\telegram\TelegramEntity;
+
+use Yii;
+use yii\base\Exception;
+use yii\httpclient\Client;
 use app\modules\telegramBot\TelegramModule;
 use dicr\telegram\TelegramResponse;
-use Yii;
-use yii\base\Exception;
-use yii\httpclient\Client;
-
-namespace dicr\telegram;
-
-use Yii;
-use yii\base\Exception;
-use yii\httpclient\Client;
 
 use function array_filter;
 use function sleep;
