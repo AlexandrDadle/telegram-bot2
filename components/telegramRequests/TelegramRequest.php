@@ -48,8 +48,6 @@ abstract class TelegramRequest extends TelegramEntity
      */
     public function send()
     {
-        if (true) throw new Exception('JA popal suda');
-
         // фильтруем данные
         $data = array_filter(
             $this->json,
