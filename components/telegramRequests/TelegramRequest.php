@@ -53,7 +53,7 @@ abstract class TelegramRequest extends \dicr\telegram\TelegramRequest
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json'
             ]);
-        if (!$req){
+        if ($req){
             throw new Exception('4to-to poszlo nie tak');
         }
 
