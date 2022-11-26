@@ -6,6 +6,7 @@ use app\components\CheckBackCommand;
 use app\models\Products;
 use app\models\User;
 use dicr\telegram\entity\Update;
+use dicr\telegram\request\SendMessage;
 use dicr\telegram\request\SetWebhook;
 use Yii;
 use yii\helpers\Json;
@@ -151,6 +152,30 @@ class TelegramModule extends \dicr\telegram\TelegramModule
 
         }
         return true;
+    }
+
+    public function sendMessage($userID, $messageText, $replyMarkup)
+    {
+        if ($replyMarkup) {
+            $encodedMarkup = json_encode($replyMarkup);
+            /** @var SendMessage $request формируем запрос */
+            $request = $this->createRequest([
+                'class' => SendMessage::class,
+                'chatId' => $userID,
+                'text' => $messageText,
+                'parseMode' => SendMessage::PARSE_MODE_MARKDOWN_V2,
+                'replyMarkup' => $encodedMarkup,
+            ]);
+        } else {
+            /** @var SendMessage $request формируем запрос */
+            $request = $this->telegramModule->createRequest([
+                'class' => SendMessage::class,
+                'chatId' => $userID,
+                'text' => $messageText
+            ]);
+        }
+        // отправка сообщения
+        $response = $request->send();
     }
 
 

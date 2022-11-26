@@ -171,5 +171,27 @@ class CheckIncomeMessage extends BaseObject
     /**
      * @throws Exception
      */
-
+    public function sendMessage($chatID, $messageText, $replyMarkup = '')
+    {
+        if ($replyMarkup) {
+            $encodedMarkup = json_encode($replyMarkup);
+            /** @var SendMessage $request формируем запрос */
+            $request = $this->telegramModule->createRequest([
+                'class' => SendMessage::class,
+                'chatId' => $chatID,
+                'text' => $messageText,
+                'parseMode' => SendMessage::PARSE_MODE_MARKDOWN_V2,
+                'replyMarkup' => $encodedMarkup,
+            ]);
+        } else {
+            /** @var SendMessage $request формируем запрос */
+            $request = $this->telegramModule->createRequest([
+                'class' => SendMessage::class,
+                'chatId' => $chatID,
+                'text' => $messageText
+            ]);
+        }
+        // отправка сообщения
+        $response = $request->send();
+    }
 }
