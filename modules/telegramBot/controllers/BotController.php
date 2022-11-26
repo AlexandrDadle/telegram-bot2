@@ -3,15 +3,9 @@
 namespace app\modules\telegramBot\controllers;
 
 use app\modules\telegramBot\TelegramModule;
-use dicr\helper\ArrayHelper;
-use dicr\telegram\entity\Message;
 use dicr\telegram\entity\Update;
-use dicr\telegram\entity\WebhookInfo;
 use dicr\telegram\request\DeleteWebHook;
 use dicr\telegram\request\GetWebhookInfo;
-use dicr\telegram\request\SendMessage;
-use dicr\telegram\TelegramRequest;
-use dicr\telegram\TelegramResponse;
 use Yii;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -60,7 +54,7 @@ class BotController extends Controller
     {
         $this->module->installWebHook();
 
-        return $this->asJson([]);
+        return true;
     }
 
     public function actionDeleteWebHook()
