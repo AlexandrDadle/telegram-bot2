@@ -45,7 +45,7 @@ class TelegramModule extends \dicr\telegram\TelegramModule
         $userID = $update->message->from->id;
         $chatID = $update->message->chat->id;
 
-        Yii::error($update->message->from, 'webhook');
+        Yii::error($update->message->from->attributes, 'webhook');
 
         $user = User::findOne(['tg_user_id' => $userID]);
         if (!$user) {
