@@ -10,7 +10,7 @@ use yii\httpclient\Client;
 
 class TelegramRequest extends \dicr\telegram\TelegramRequest
 {
-    /** @var TelegramModule */
+    /** @var \app\modules\telegramBot\TelegramModule */
     protected $module;
 
 
