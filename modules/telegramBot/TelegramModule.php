@@ -41,11 +41,8 @@ class TelegramModule extends \dicr\telegram\TelegramModule
     {
         $command = new CheckBackCommand;
         $text = $update->message->text;
-        $userName = $update->message->from->userName;
         $userID = $update->message->from->id;
         $chatID = $update->message->chat->id;
-
-        Yii::error($update->message->from->attributes, 'webhook');
 
         $user = User::findOne(['tg_user_id' => $userID]);
         if (!$user) {
@@ -177,10 +174,14 @@ class TelegramModule extends \dicr\telegram\TelegramModule
                 'text' => $messageText
             ]);
         }
-        // отправка сообщения
-        $response = $request->send();
+        try {
+            $request->send();
+        } catch (\Exception $exception){
+            Yii::error([
+                'Error' => $exception->getMessage(),
+            ],'webhook');
+        }
 
-        Yii::error($response->text, 'webhook');
     }
 
 
