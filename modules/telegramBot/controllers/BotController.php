@@ -23,10 +23,10 @@ class BotController extends Controller
     public $enableCsrfValidation = false;
 
 
-    public static function webhookResponse(Update $update, TelegramModule $module)
-    {
-        Yii::debug(['update' => $update], 'webhook');
-    }
+//    public static function webhookResponse(Update $update, TelegramModule $module)
+//    {
+//        Yii::debug(['update' => $update], 'webhook');
+//    }
 
     public function actionIndex(): Response
     {
@@ -60,7 +60,7 @@ class BotController extends Controller
     public function actionDeleteWebHook()
     {
         /** @var TelegramModule $module */
-        $module = Yii::$app->get('telegram');
+        $module = TelegramModule::getInstance();
 
         $webhook = $module->createRequest(['class' => DeleteWebHook::class]);
 
