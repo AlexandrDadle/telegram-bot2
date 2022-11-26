@@ -168,7 +168,7 @@ class TelegramModule extends \dicr\telegram\TelegramModule
             ]);
         } else {
             /** @var SendMessage $request формируем запрос */
-            $request = $this->telegramModule->createRequest([
+            $request = $this->createRequest([
                 'class' => SendMessage::class,
                 'chatId' => $userID,
                 'text' => $messageText
