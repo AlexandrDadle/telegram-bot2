@@ -41,15 +41,15 @@ abstract class TelegramRequest extends \dicr\telegram\TelegramRequest
      */
     public function send()
     {
-//        // фильтруем данные
-//        $data = array_filter(
-//            $this->json,
-//            static fn($val): bool => $val !== null && $val !== '' && $val !== []
-//        );
+        // фильтруем данные
+        $data = array_filter(
+            $this->json,
+            static fn($val): bool => $val !== null && $val !== '' && $val !== []
+        );
 
         // создаем запрос
         $req = $this->module->httpClient()
-            ->post($this->func(), $this->json, [
+            ->post($this->func(), $data, [
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json'
             ]);
@@ -60,7 +60,7 @@ abstract class TelegramRequest extends \dicr\telegram\TelegramRequest
         Yii::error('Ответ: ' . $result->toString(), 'webhook');
 
         if (! $result->isOk) {
-            throw new Exception('HTTP-error: ' . $result->statusCode);
+            throw new Exception('HTTP-error: ' . $result->statusCode. ', Request: ' . $req->toString());
         }
 
         // формируем ответ Telegram
