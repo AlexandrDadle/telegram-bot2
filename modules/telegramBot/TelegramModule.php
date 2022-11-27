@@ -5,6 +5,7 @@ namespace app\modules\telegramBot;
 use app\components\CheckBackCommand;
 use app\models\Products;
 use app\models\User;
+use dicr\http\HttpCompressionBehavior;
 use dicr\telegram\entity\Update;
 use dicr\telegram\request\SendMessage;
 use dicr\telegram\request\SetWebhook;
@@ -12,6 +13,7 @@ use dicr\telegram\TelegramRequest;
 use Yii;
 use yii\base\InvalidConfigException;
 use yii\helpers\Json;
+use yii\httpclient\Client;
 
 /**
  * telegramBot module definition class
@@ -32,6 +34,28 @@ class TelegramModule extends \dicr\telegram\TelegramModule
         $request->send();
 
         Yii::debug('Установлен webhook: ' . $request->url, __METHOD__);
+    }
+
+    /** @var Client */
+    private $_httpClient;
+
+    /**
+     * Клиент HTTP.
+     *
+     * @return Client
+     * @throws InvalidConfigException
+     */
+    public function httpClient() : Client
+    {
+        if ($this->_httpClient === null) {
+            $this->_httpClient = Yii::createObject(array_merge([
+                'class' => Client::class,
+                'baseUrl' => $this->apiUrl . '/bot' . $this->botToken,
+                'as compression' => HttpCompressionBehavior::class
+            ], $this->httpClientConfig ?: []));
+        }
+
+        return $this->_httpClient;
     }
 
     /**
