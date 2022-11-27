@@ -30,9 +30,24 @@ class BotController extends Controller
 
     public function actionIndex(): Response
     {
+        if (!Yii::$app->request->isPost) {
+            throw new BadRequestHttpException();
+        }
 
+        Yii::debug('Webhook: ' . Yii::$app->request->rawBody);
 
-        return $this->asJson([]);
+        $ret = true;
+
+        // вызываем пользовательский обработчик
+        if (!empty($this->module->handler)) {
+            $update = new Update([
+                'json' => Yii::$app->request->bodyParams
+            ]);
+
+            $ret = call_user_func($this->module->handler, $update, $this->module);
+        }
+
+        return $this->asJson($ret);
     }
 
     public function actionSetWebHook(): Response
@@ -58,7 +73,7 @@ class BotController extends Controller
     public function actionWebHookInfo()
     {
         /** @var TelegramModule $module */
-        $module = TelegramModule::getInstance();
+        $module = $this->module;
 
 
         $webhook = $module->createRequest(['class' => GetWebhookInfo::class]);
