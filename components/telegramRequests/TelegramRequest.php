@@ -17,24 +17,6 @@ use function sleep;
 class TelegramRequest extends \dicr\telegram\TelegramRequest
 {
 
-    function func(): string
-    {
-        return '';
-    }
-
-    /**
-     * Конструктор.
-     *
-     * @param TelegramModule $module
-     * @param array $config
-     */
-    public function __construct(TelegramModule $module, array $config = [])
-    {
-        $this->module = $module;
-
-        parent::__construct($module, $config);
-    }
-
     /**
      * Отправляет запрос.
      *
@@ -95,5 +77,10 @@ class TelegramRequest extends \dicr\telegram\TelegramRequest
 
         // возвращаем результат
         return $tgResponse->result;
+    }
+
+    public function func(): string
+    {
+        return 'telegramRequest';
     }
 }
