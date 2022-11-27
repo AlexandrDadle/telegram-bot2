@@ -65,6 +65,7 @@ class TelegramModule extends \dicr\telegram\TelegramModule
         $userID = $update->message->from->id;
         $chatID = $update->message->chat->id;
 
+
         $user = User::findOne(['tg_user_id' => $userID]);
         if (!$user) {
             $user = User::create($update);
@@ -196,6 +197,7 @@ class TelegramModule extends \dicr\telegram\TelegramModule
             ]);
         }
         try {
+            Yii::error($request->attributes, 'webhook');
             $request->send();
         } catch (\Exception $exception){
             $this->sendMessage($chatID, $exception->getMessage(), []);
