@@ -3,13 +3,16 @@
 namespace app\components;
 
 
+use app\modules\telegramBot\TelegramModule;
+use dicr\helper\ArrayHelper;
 use Yii;
-
 
 class CheckBackCommand
 {
+
     public static array $commands =
-        ['Вход',
+        [
+            'Вход',
             'Статистика',
             'Менеджмент',
             'Склад',
@@ -19,7 +22,8 @@ class CheckBackCommand
             'Доступные позиции',
             'Шишки',
             'Добавить продукт',
-            'Тип продукта'];
+            'Тип продукта'
+        ];
 
     const SEPORATOR = '|';
     private static string $offSetFilePath = '@app/tmp';
@@ -74,10 +78,29 @@ class CheckBackCommand
     }
 
 
-    public function setEmptyCommandFile($id)
+    public function setEmptyCommandFile(int $id)
     {
         $path = Yii::getAlias(self::$offSetFilePath . DIRECTORY_SEPARATOR . $id . '_' . self::$fileName);
         $file = fopen($path, 'w+');
         fclose($file);
+    }
+
+    /**
+     * Метод возвращает TRUE, если пользователь нажал Назад и попал в главное меню
+     * @param $id int ID пользователя
+     * @return bool
+     */
+    public function getIsMainMenu(int $id): bool
+    {
+        $path = Yii::getAlias(self::$offSetFilePath . DIRECTORY_SEPARATOR . $id . '_' . self::$fileName);
+        $file = fopen($path, 'a+');
+        $data = fgets($file);
+        $dataArray = explode(self::SEPORATOR, $data);
+        if ($dataArray[0] == 'Вход'){
+            fclose($file);
+            return true;
+        }
+        fclose($file);
+        return false;
     }
 }

@@ -5,7 +5,6 @@ namespace app\models;
 use dicr\telegram\entity\Chat;
 use dicr\telegram\entity\Update;
 use yii\db\ActiveRecord;
-use yii\debug\UserswitchAsset;
 
 /**
  * @property $id int
@@ -21,40 +20,20 @@ use yii\debug\UserswitchAsset;
  */
 class User extends ActiveRecord implements \yii\web\IdentityInterface
 {
-//    public $id;
-//    public $username;
-//    public $password;
-//    public $authKey;
-//    public $accessToken;
+
+    /** @var int Тип аккаунта Администратор */
     public const POSITION_ADMIN = 1;
+
+    /** @var int Тип аккаунта Обычный пользователь */
     public const POSITION_USER = 2;
+
+    /** @var int Тип аккаунта Оператор */
     public const POSITION_OPER = 3;
+
+    /** @var int Тип аккаунта Кладмен */
     public const POSITION_KLADMAN = 4;
 
 
-//    private static $users = [
-//        '100' => [
-//            'id' => '100',
-//            'username' => 'admin',
-//            'password' => 'admin',
-//            'authKey' => 'test100key',
-//            'accessToken' => '100-token',
-//        ],
-//        '101' => [
-//            'id' => '101',
-//            'username' => 'demo',
-//            'password' => 'demo',
-//            'authKey' => 'test101key',
-//            'accessToken' => '101-token',
-//        ],
-//        '102' => [
-//            'id' => '102',
-//            'username' => 'demo',
-//            'password' => 'demo',
-//            'authKey' => 'test102key',
-//            'accessToken' => '102-token',
-//        ],
-//    ];
 
     public static function tableName(): string
     {
@@ -86,27 +65,9 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
     }
 
     /**
-     * Finds user by username
-     *
-     * @param string $username
-     * @return static|null
-     */
-    public static function findByUsername($username)
-    {
-//        foreach (self::$users as $user) {
-//            if (strcasecmp($user['username'], $username) === 0) {
-//                return new static($user);
-//            }
-//        }
-
-        return null;
-    }
-
-    /**
      * Tworzy nowego użytkownika w BOT.
      *
-     * @param User|null $telegramUser
-     * @param Chat $chat Czat uzytkownika, z którego się odbywa rejestracja
+     * @param Update $update
      * @return User
      */
     public static function create(Update $update): User
@@ -149,13 +110,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
     public function getReplayMarkupKeyboard($command)
     {
-        if ($command != '/start' && $this->isUser()) {
-            return ['remove_keyboard' => true];
-        }
         switch ($command) {
-            //
-            // Sterowanie wejśćiem
-            //
             case '/start':
                 $replyMarkup = [
                     'keyboard' => [
@@ -199,9 +154,6 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
                     ];
                 }
                 break;
-            //
-            //Sterowanie magazynem
-            //
             case 'Склад':
                 if ($this->hasStoreAccess()) {
                     if ($this->isAdmin()) {
@@ -276,7 +228,6 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
                     $replyMarkup['resize_keyboard'] = true;
                 }
                 break;
-
             case 'Smell Bomb':
                 if (!$this->isAdmin()) {
                     return ['remove_keyboard' => true];
@@ -300,7 +251,7 @@ class User extends ActiveRecord implements \yii\web\IdentityInterface
 
     public function hasNoAccess(): string
     {
-        return 'Доступ закрыт.';
+        return '🛑 Доступ закрыт.';
     }
 
     public function isAdmin(): bool

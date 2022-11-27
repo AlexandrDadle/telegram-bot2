@@ -5,14 +5,14 @@ namespace app\modules\telegramBot;
 use app\components\CheckBackCommand;
 use app\models\Products;
 use app\models\User;
+use app\models\UserMenuCommands;
+use dicr\helper\ArrayHelper;
 use dicr\http\HttpCompressionBehavior;
 use dicr\telegram\entity\Update;
 use dicr\telegram\request\SendMessage;
 use dicr\telegram\request\SetWebhook;
-use dicr\telegram\TelegramRequest;
 use Yii;
 use yii\base\InvalidConfigException;
-use yii\helpers\Json;
 use yii\httpclient\Client;
 
 /**
@@ -21,7 +21,7 @@ use yii\httpclient\Client;
 class TelegramModule extends \dicr\telegram\TelegramModule
 {
 
-    public function installWebHook() : void
+    public function installWebHook(): void
     {
         /** @var SetWebhook $request */
         $request = $this->createRequest([
@@ -45,7 +45,7 @@ class TelegramModule extends \dicr\telegram\TelegramModule
      * @return Client
      * @throws InvalidConfigException
      */
-    public function httpClient() : Client
+    public function httpClient(): Client
     {
         if ($this->_httpClient === null) {
             $this->_httpClient = Yii::createObject(array_merge([
@@ -60,16 +60,18 @@ class TelegramModule extends \dicr\telegram\TelegramModule
 
     public function handle(Update $update): bool
     {
-        $command = new CheckBackCommand;
+        $command = new UserMenuCommands();
         $text = $update->message->text;
         $userID = $update->message->from->id;
         $chatID = $update->message->chat->id;
-
-
         $user = User::findOne(['tg_user_id' => $userID]);
         if (!$user) {
             $user = User::create($update);
         }
+        if (in_array($text, Yii::$app->params['backCommands'])){
+            UserMenuCommands::addCommand($text, $userID);
+        }
+
         if (!empty($text)) {
             switch ($text) {
                 case '/start':
@@ -78,22 +80,19 @@ class TelegramModule extends \dicr\telegram\TelegramModule
                     $this->sendMessage($chatID, $messageText, $replyMarkup);
                     break;
                 case 'Вход':
-                    $command->setEmptyCommandFile($update->message->from->id);
                     if (!$user->isTeammate()) {
                         $messageText = $user->hasNoAccess();
                     } else {
                         $messageText = "
 ```
-
-📇  $user->first_name
+📇 $user->first_name
 
 🆔 $user->tg_user_id
-
 ```
-                ";
+";
                     }
                     $replyMarkup = $user->getReplayMarkupKeyboard($text);
-                    $this->sendMessage($chatID, $messageText, $replyMarkup);
+                    $this->sendMessage($chatID, $messageText, $replyMarkup, SendMessage::PARSE_MODE_MARKDOWN_V2);
                     break;
                 case 'Склад':
                     if (!$user->hasStoreAccess()) {
@@ -101,9 +100,9 @@ class TelegramModule extends \dicr\telegram\TelegramModule
                     } else {
                         $messageText = "
 ```
-      📦Склад
+       📦Склад            
       
- • Шишки      -  " . Products::getAllCountInStockByType(Products::TYPE_PRODUCT_ZIOLO) . "
+ • Шишки      - " . Products::getAllCountInStockByType(Products::TYPE_PRODUCT_ZIOLO) . "
  
  • Амфетамин  - " . Products::getAllCountInStockByType(Products::TYPE_PRODUCT_BIALKO) . "
  
@@ -111,13 +110,11 @@ class TelegramModule extends \dicr\telegram\TelegramModule
  
  • Гашиш      - " . Products::getAllCountInStockByType(Products::TYPE_PRODUCT_GASH) . "
  
- 
- 
 ```
                 ";
                     }
                     $replyMarkup = $user->getReplayMarkupKeyboard($text);
-                    $this->sendMessage($chatID, $messageText, $replyMarkup);
+                    $this->sendMessage($chatID, $messageText, $replyMarkup, SendMessage::PARSE_MODE_MARKDOWN_V2);
                     break;
                 case 'Доступные позиции':
                 case 'Шишки':
@@ -141,42 +138,33 @@ class TelegramModule extends \dicr\telegram\TelegramModule
                     $replyMarkup = $user->getReplayMarkupKeyboard($text);
                     $this->sendMessage($chatID, $messageText, $replyMarkup);
                     break;
-
-
-                //Typ produktu
-                case 'Smell Bomb':
-                    if (!$user->isAdmin()) {
-                        $messageText = $user->hasNoAccess();
-                    } else {
-                        $messageText = 'Smell Bomb';
-                    }
-                    $replyMarkup = $user->getReplayMarkupKeyboard($text);
-                    $this->sendMessage($chatID, $messageText, $replyMarkup);
-                    break;
-
-                case 'Цена брутто':
-                    if (!$user->isAdmin()) {
-                        $messageText = $user->hasNoAccess();
-                    } else {
-                        $messageText = 'Цена брутто';
-                    }
-                    $replyMarkup = $user->getReplayMarkupKeyboard($text);
-                    $this->sendMessage($chatID, $messageText, $replyMarkup);
-                    break;
                 case 'Назад':
-                    $lastCommand = $command->getLastCommand($update->message->from->id);
+                    $lastCommand = $command->getLastUserCommand();
                     $messageText = $lastCommand;
+                    $parseMode = null;
+                    if ($lastCommand == 'Вход') {
+                        $messageText = "
+```
+📇 $user->first_name
+                            
+🆔 $user->tg_user_id
+```
+                            ";
+                        $parseMode = SendMessage::PARSE_MODE_MARKDOWN_V2;
+                    }
                     $replyMarkup = $user->getReplayMarkupKeyboard($lastCommand);
-                    $this->sendMessage($chatID, $messageText, $replyMarkup);
+                    $this->sendMessage($chatID, $messageText, $replyMarkup, $parseMode);
                     break;
-
+                default:
+                    $textMessage = 'Неизвестная команда';
+                    $this->sendMessage($chatID, $textMessage);
             }
 
         }
         return true;
     }
 
-    public function sendMessage($chatID, $messageText, $replyMarkup)
+    public function sendMessage($chatID, $messageText, $replyMarkup = null, $parseMode = null)
     {
         if ($replyMarkup) {
             $encodedMarkup = json_encode($replyMarkup);
@@ -185,7 +173,7 @@ class TelegramModule extends \dicr\telegram\TelegramModule
                 'class' => SendMessage::class,
                 'chatId' => $chatID,
                 'text' => $messageText,
-                'parseMode' => SendMessage::PARSE_MODE_MARKDOWN_V2,
+                'parseMode' => $parseMode,
                 'replyMarkup' => $encodedMarkup,
             ]);
         } else {
@@ -199,7 +187,7 @@ class TelegramModule extends \dicr\telegram\TelegramModule
         try {
             Yii::error($request->attributes, 'webhook');
             $request->send();
-        } catch (\Exception $exception){
+        } catch (\Exception $exception) {
             $this->sendMessage($chatID, $exception->getMessage(), []);
         }
 
