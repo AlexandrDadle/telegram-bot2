@@ -58,19 +58,6 @@ class TelegramModule extends \dicr\telegram\TelegramModule
         return $this->_httpClient;
     }
 
-    /**
-     * Создает запрос.
-     *
-     * @param array $config
-     * @return TelegramRequest
-     * @throws InvalidConfigException
-     */
-    public function createRequest(array $config) : TelegramRequest
-    {
-        /** @noinspection PhpIncompatibleReturnTypeInspection */
-        return Yii::createObject($config, [$this]);
-    }
-
     public function handle(Update $update): bool
     {
         $command = new CheckBackCommand;
