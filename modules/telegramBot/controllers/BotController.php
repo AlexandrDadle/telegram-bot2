@@ -60,7 +60,7 @@ class BotController extends Controller
     public function actionDeleteWebHook()
     {
         /** @var TelegramModule $module */
-        $module = TelegramModule::getInstance();
+        $module = $this->module;
 
         $webhook = $module->createRequest(['class' => DeleteWebHook::class]);
 
