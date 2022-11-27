@@ -14,13 +14,8 @@ use dicr\telegram\TelegramResponse;
 use function array_filter;
 use function sleep;
 
-/**
- * Абстрактный запрос.
- */
-class TelegramRequest extends TelegramEntity
+class TelegramRequest extends \dicr\telegram\TelegramRequest
 {
-    /** @var TelegramModule */
-    protected TelegramModule $module;
 
     function func(): string
     {
@@ -37,7 +32,7 @@ class TelegramRequest extends TelegramEntity
     {
         $this->module = $module;
 
-        parent::__construct($config);
+        parent::__construct($module, $config);
     }
 
     /**
