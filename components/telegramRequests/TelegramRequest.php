@@ -24,7 +24,7 @@ class TelegramRequest extends TelegramEntity
 
     function func(): string
     {
-        return 'api.telegram.org';
+        return '';
     }
 
     /**
