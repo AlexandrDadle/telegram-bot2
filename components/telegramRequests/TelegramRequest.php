@@ -17,12 +17,15 @@ use function sleep;
 /**
  * Абстрактный запрос.
  */
-abstract class TelegramRequest extends TelegramEntity
+class TelegramRequest extends TelegramEntity
 {
     /** @var TelegramModule */
     protected TelegramModule $module;
 
-    abstract function func(): string;
+    function func(): string
+    {
+        return 'api.telegram.org';
+    }
 
     /**
      * Конструктор.
